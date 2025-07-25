@@ -83,7 +83,7 @@ export default function StreamCard({
     .includes(props.streamName);
 
   return (
-    <Card className="flex flex-col aspect-square">
+    <Card className={cn("flex flex-col aspect-square", { "border-red-200": !props.readyTime, "border-green-200": props.readyTime })}>
       <CardHeader className="text-xs">
         <CardDescription>{streamName}</CardDescription>
       </CardHeader>
