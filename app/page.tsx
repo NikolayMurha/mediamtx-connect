@@ -28,11 +28,20 @@ export default async function Home() {
 
   try {
     paths = await api.v3.pathsList();
+    // Сортуємо items: спочатку ті, що мають readyTime, потім за числовим суфіксом імені
+    paths?.data.items?.sort((a, b) => {
+      // Елементи з readyTime === null повинні бути внизу
+      if (a.readyTime === null && b.readyTime !== null) return 1;
+      if (a.readyTime !== null && b.readyTime === null) return -1;
+      // Якщо readyTime однаковий статус (обидва не null або обидва null), сортуємо по числовому суфіксу імені
+      const getNum = (s: string) => parseInt(s.match(/\d+$/)?.[0] ?? "0", 10);
+      return getNum(a.name || "") - getNum(b.name || "");
+    });
     mediaMtxConfig = await api.v3.configGlobalGet({ cache: "no-cache" });
   } catch {
     console.error("Error reaching MediaMTX at: ", config.mediaMtxUrl);
   }
-
+  debugger
   const remoteMediaMtxUrl = config.remoteMediaMtxUrl;
 
   return (
